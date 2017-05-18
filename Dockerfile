@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Build version : ubuntu16.04_v1.0
+# Build version : v1.1
 
 FROM ubuntu:16.04
 
@@ -45,5 +45,8 @@ RUN cd /usr/local/heasoft-6.21/BUILD_DIR &&                        \
 ENV HEADAS=/usr/local/heasoft-6.21/x86_64-unknown-linux-gnu-libc2.23
 
 RUN echo '. $HEADAS/headas-init.sh' >> /root/.bashrc
+
+RUN apt-get update -y && apt-get install -y                        \
+        tcsh
 
 CMD ["/bin/bash"]
