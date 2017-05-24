@@ -45,7 +45,9 @@ RUN cd /usr/local &&                                               \
     cd heasoft-6.21/BUILD_DIR &&                                   \
     ./configure &&                                                 \
     make &&                                                        \
-    make install
+    make install &&                                                \
+    cd .. &&                                                       \
+    rm -rf BUILD_DIR
 
 ENV HEADAS=/usr/local/heasoft-6.21/x86_64-unknown-linux-gnu-libc2.23
 
