@@ -15,13 +15,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Build version : v1.3
+# Build version : v1.4
 
-FROM ubuntu:16.04
+FROM ubuntu:20.04
 
 MAINTAINER sfegan@llr.in2p3.fr
 
-RUN apt-get update -y && apt-get install -y                        \
+RUN apt-get update -y && DEBIAN_FRONTEND=noninteractive  apt-get install -y \
         gcc                                                        \
         g++                                                        \
         gfortran                                                   \
@@ -33,23 +33,21 @@ RUN apt-get update -y && apt-get install -y                        \
         make                                                       \
         wget                                                       \
         tcsh                                                       \
-        python-pyfits                                              \
-        python3-pyfits
+        python3-fitsio
 
 ENV CC=gcc CXX=g++ FC=gfortran PERL=perl PYTHON=python
 
-RUN cd /usr/local &&                                               \
-    wget http://heasarc.gsfc.nasa.gov/FTP/software/lheasoft/release/heasoft-6.21src.tar.gz && \
-    tar zxvf heasoft-6.21src.tar.gz &&                             \
-    rm -f heasoft-6.21src.tar.gz &&                                \
-    cd heasoft-6.21/BUILD_DIR &&                                   \
+# ADD https://heasarc.gsfc.nasa.gov/FTP/software/lheasoft/lheasoft6.29/heasoft-6.29src.tar.gz /usr/local
+ADD heasoft-6.29src.tar.gz /usr/local
+
+RUN cd /usr/local/heasoft-6.29/BUILD_DIR &&                        \
     ./configure &&                                                 \
     make &&                                                        \
     make install &&                                                \
     cd .. &&                                                       \
     rm -rf BUILD_DIR
 
-ENV HEADAS=/usr/local/heasoft-6.21/x86_64-unknown-linux-gnu-libc2.23
+ENV HEADAS=/usr/local/heasoft-6.29/x86_64-unknown-linux-gnu-libc2.23
 
 RUN echo '. $HEADAS/headas-init.sh' >> /root/.bashrc
 
@@ -64,8 +62,13 @@ RUN mkdir $CALDB &&                                                \
 RUN echo '. $CALDB/software/tools/caldbinit.sh' >> /root/.bashrc
 
 RUN cd $CALDB &&                                                   \
-    wget https://heasarc.gsfc.nasa.gov/FTP/caldb/data/swift/uvota/goodfiles_swift_uvota_20170130.tar.Z && \
-    tar -zxf goodfiles_swift_uvota_20170130.tar.Z &&               \
-    rm -f goodfiles_swift_uvota_20170130.tar.Z
+    wget https://heasarc.gsfc.nasa.gov/FTP/caldb/data/swift/uvota/goodfiles_swift_uvota_20201215.tar.Z && \
+    tar -zxf goodfiles_swift_uvota_20201215.tar.Z &&               \
+    rm -f goodfiles_swift_uvota_20201215.tar.Z
+
+RUN cd $CALDB &&                                                   \
+    wget https://heasarc.gsfc.nasa.gov/FTP/caldb/data/swift/bat/goodfiles_swift_bat_20171016.tar.Z && \
+    tar -zxf goodfiles_swift_bat_20171016.tar.Z &&                 \
+    rm -f goodfiles_swift_bat_20171016.tar.Z
 
 CMD ["/bin/bash"]
