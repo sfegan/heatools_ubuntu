@@ -47,7 +47,7 @@ RUN cd /usr/local/heasoft-6.29/BUILD_DIR &&                        \
     cd .. &&                                                       \
     rm -rf BUILD_DIR
 
-ENV HEADAS=/usr/local/heasoft-6.29/x86_64-unknown-linux-gnu-libc2.23
+ENV HEADAS=/usr/local/heasoft-6.29/x86_64-pc-linux-gnu-libc2.31
 
 RUN echo '. $HEADAS/headas-init.sh' >> /root/.bashrc
 
